@@ -47,6 +47,8 @@ func main() {
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
+	} else {
+		fmt.Println("[LOG]Set local_n_address: ", ip)
 	}
 
 	// config local interface name
@@ -55,6 +57,8 @@ func main() {
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
+	} else {
+		fmt.Println("[LOG]Set local_n_if_name: ", localInterfaceName)
 	}
 
 	// config cu ip address
@@ -66,7 +70,8 @@ func main() {
 		_, err := cmd.CombinedOutput()
 		if err != nil {
 			fmt.Println("[Err]", err)
+		} else {
+			fmt.Println("Config CU ip: ", cuIp)
 		}
-		fmt.Println("Config CU ip: ", cuIp)
  	}
 }
