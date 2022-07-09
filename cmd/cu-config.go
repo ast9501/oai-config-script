@@ -50,7 +50,7 @@ func main() {
 	}
 
 	// TODO: Add fixed virtual ip as ip
-
+	ip = "10.244.1.2"
 	mod = "204c\\        GNB_IPV4_ADDRESS_FOR_NG_AMF              = \"" + ip + "/16\";"
 	cmd = exec.Command("sed", "-i", mod, "cu_gnb.conf")
 	_, err = cmd.CombinedOutput()
