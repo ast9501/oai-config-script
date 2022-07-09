@@ -37,6 +37,35 @@ func main() {
 	localInterfaceName := "eth0"
 	filePath := "openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"
 
+	// config mnc
+	mod := "20c\\                  mnc = 93;"
+	cmd := exec.Command("sed", "-i", mod, filePath)
+	_, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("[Err]", err)
+	} else {
+		fmt.Println("[LOG]Set mnc: 93")
+	}
+
+	// config protc
+	mod = "43c\\    local_s_portc   = 600;"
+	cmd = exec.Command("sed", "-i", mod, filePath)
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("[Err]", err)
+	} else {
+		fmt.Println("[LOG]Set local_s_protc: 600")
+	}
+
+	mod = "45c\\    remote_s_portc  = 601;"
+	cmd = exec.Command("sed", "-i", mod, filePath)
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("[Err]", err)
+	} else {
+		fmt.Println("[LOG]Set remote_s_protc: 601")
+	}
+
 	// config local ip address
 	ip, err := GetInterfaceIpv4Addr(localInterfaceName)
 	if err != nil {
