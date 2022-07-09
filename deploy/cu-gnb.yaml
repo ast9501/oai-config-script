@@ -8,7 +8,7 @@ spec:
   clusterIP: None
   ports:
     - name: upf
-      protocol: TCP
+      protocol: UDP #SCTP #TCP
       port: 2152
     - name: du1
       protocol: TCP
@@ -16,6 +16,12 @@ spec:
     - name: du2
       protocol: TCP
       port: 601
+    - name: sctp
+      protocol: SCTP
+      port: 38412
+    - name: f1
+      protocol: SCTP
+      port: 30923
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -37,17 +43,21 @@ spec:
         securityContext:
           privileged: true
         command: ["/bin/bash"]
-        args: ["-c", "ifconfig eth0:1 10.244.1.2/16 up && ./setup-cu && sleep 5 && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"]
-        #volumeMounts:
-        #- name: cucfg
-        #  mountPath: /oai/openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf
+        #args: ["-c", "ifconfig eth0:1 10.244.1.2/16 up && ./setup-cu && sleep 36000"]
+        args: ["-c", "ip addr add 10.244.1.2/16 dev eth0 && ./setup-cu && sleep 15 && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"]
+        
+        volumeMounts:
+        - name: cpu-dma
+          mountPath: /dev/cpu_dma_latency
+        - name: cpu-device-sys
+          mountPath: /sys/devices/system/cpu
         #  subPath: cu_gnb.conf
         
         #- name: setup-cu
         #  mountPath: /oai/setup-cu.exe
         #  subPath: setup-cu
       
-      #volumes:
+      volumes:
       #- name: cucfg
       #  configMap:
       #    name: gnb-cu-configmap
@@ -55,8 +65,11 @@ spec:
       #    - key: cu_gnb.conf
       #      path: cu_gnb.conf
       
-      #- name: setup-cu
-      #  hostPath:
-      #    path: /home/alan/oai-solution/bin/setup-cu.exe
-      #    type: FileOrCreate
+      - name: cpu-dma
+        hostPath:
+          path: /dev/cpu_dma_latency
+      - name: cpu-device-sys
+        hostPath:
+          path: /sys/devices/system/cpu
+          #type: FileOrCreate
       

@@ -8,17 +8,35 @@ spec:
   clusterIP: None
   ports:
     - name: upf
-      protocol: TCP
+      protocol: UDP #SCTP #TCP
       port: 2152
-    - name: rf
-      protocol: TCP
-      port: 4043
+    #- name: rf
+    #  protocol: TCP
+    #  port: 4043
     - name: interconnection1
       protocol: TCP
       port: 600
     - name: interconnection2
       protocol: TCP
       port: 601
+    - name: f1
+      protocol: SCTP
+      port: 30923 # 38472 on spec
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oai-ru-svc
+spec:
+  type: NodePort
+  selector:
+    app: oai-du
+  ports:
+    - name: rf
+      protocol: TCP
+      port: 4043
+      targetPort: 4043
+      nodePort: 30043
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -40,7 +58,12 @@ spec:
         securityContext:
           privileged: true
         command: ["/bin/bash"]
-        args: ["-c", "sleep 30 && ./setup-du && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf"]
+        args: ["-c", "sleep 40 && ./setup-du && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf"]
+        volumeMounts:
+        - name: cpu-dma
+          mountPath: /dev/cpu_dma_latency
+        - name: cpu-device-sys
+          mountPath: /sys/devices/system/cpu
         #volumeMounts:
         #- name: cucfg
         #  mountPath: /oai/openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf
@@ -49,7 +72,22 @@ spec:
         #- name: setup-cu
         #  mountPath: /oai/setup-cu.exe
         #  subPath: setup-cu
-      
+
+      volumes:
+      #- name: cucfg
+      #  configMap:
+      #    name: gnb-cu-configmap
+      #    items:
+      #    - key: cu_gnb.conf
+      #      path: cu_gnb.conf
+
+      - name: cpu-dma
+        hostPath:
+          path: /dev/cpu_dma_latency
+      - name: cpu-device-sys
+        hostPath:
+          path: /sys/devices/system/cpu
+
       #volumes:
       #- name: cucfg
       #  configMap:
