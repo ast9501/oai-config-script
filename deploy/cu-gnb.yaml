@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: oai-cu-svc
+spec:
+  selector:
+    app: oai-cu
+  clusterIP: None
+  ports:
+    - name: upf
+      protocol: TCP
+      port: 2152
+    - name: du1
+      protocol: TCP
+      port: 600
+    - name: du2
+      protocol: TCP
+      port: 601
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oai-cu-deployment
+spec:
+  selector:
+    matchLabels:
+      app: oai-cu
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: oai-cu
+    spec:
+      containers:
+      - name: myapp-container
+        image: alan0415/oai-gnb:v0.2
+        securityContext:
+          privileged: true
+        command: ["/bin/bash"]
+        args: ["-c", "ifconfig eth0:1 10.244.1.2/16 up && ./setup-cu && sleep 5 && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"]
+        #volumeMounts:
+        #- name: cucfg
+        #  mountPath: /oai/openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf
+        #  subPath: cu_gnb.conf
+        
+        #- name: setup-cu
+        #  mountPath: /oai/setup-cu.exe
+        #  subPath: setup-cu
+      
+      #volumes:
+      #- name: cucfg
+      #  configMap:
+      #    name: gnb-cu-configmap
+      #    items: 
+      #    - key: cu_gnb.conf
+      #      path: cu_gnb.conf
+      
+      #- name: setup-cu
+      #  hostPath:
+      #    path: /home/alan/oai-solution/bin/setup-cu.exe
+      #    type: FileOrCreate
+      
