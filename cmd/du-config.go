@@ -33,12 +33,13 @@ func GetInterfaceIpv4Addr(interfaceName string) (addr string, err error) {
 
 func main() {
 	//amfDomainName := "sample.com"
-	cuDomainName := "sample.com"
-	localInterfaceName := "ens3"
+	cuDomainName := "oai-cu-svc"
+	localInterfaceName := "eth0"
+	filePath := "openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/du_gnb.conf"
 
 	// config mnc
 	mod := "19c\\                  mnc = 93;"
-	cmd := exec.Command("sed", "-i", mod, "du_gnb.conf")
+	cmd := exec.Command("sed", "-i", mod, filePath)
 	_, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
@@ -48,7 +49,7 @@ func main() {
 
 	// config protc
 	mod = "195c\\    local_n_portc   = 601;"
-	cmd = exec.Command("sed", "-i", mod, "du_gnb.conf")
+	cmd = exec.Command("sed", "-i", mod, filePath)
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
@@ -57,7 +58,7 @@ func main() {
 	}
 
 	mod = "197c\\    remote_n_portc  = 600;"
-	cmd = exec.Command("sed", "-i", mod, "du_gnb.conf")
+	cmd = exec.Command("sed", "-i", mod, filePath)
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
@@ -72,7 +73,7 @@ func main() {
 	}
 	fmt.Println("Config local interface ip: ", ip)
 	mod = "193c\\    local_n_address = \"" + ip + "\";"
-	cmd = exec.Command("sed", "-i", mod, "du_gnb.conf")
+	cmd = exec.Command("sed", "-i", mod, filePath)
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
@@ -82,7 +83,7 @@ func main() {
 
 	// config local interface name
 	mod = "192c\\    local_n_if_name = \"" + localInterfaceName + "\";"
-	cmd = exec.Command("sed", "-i", mod, "du_gnb.conf")
+	cmd = exec.Command("sed", "-i", mod, filePath)
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
@@ -95,7 +96,7 @@ func main() {
  	for _, cuIp := range iprecords {
 		modCuAddr := "194c\\    remote_n_address = \"" + cuIp.String() + "\";"
 		//fmt.Println(modAmfAddr)
-  		cmd = exec.Command("sed", "-i", modCuAddr, "du_gnb.conf")
+  		cmd = exec.Command("sed", "-i", modCuAddr, filePath)
 		_, err := cmd.CombinedOutput()
 		if err != nil {
 			fmt.Println("[Err]", err)
