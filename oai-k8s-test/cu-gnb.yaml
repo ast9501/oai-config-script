@@ -48,8 +48,8 @@ spec:
         securityContext:
           privileged: true
         command: ["/bin/bash"]
-        args: ["-c", "sleep 36000"]
-        #args: ["-c", "ip addr add 10.244.1.2/16 dev eth0 && ./setup-cu && sleep 15 && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"]
+        #args: ["-c", "sleep 36000"]
+        args: ["-c", "./setup-cu && sleep 3 && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"]
         #volumeMounts:
         #- name: cucfg
         #  mountPath: /oai/openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf
