@@ -36,6 +36,8 @@ spec:
     metadata:
       labels:
         app: oai-cu
+      annotations:
+        k8s.v1.cni.cncf.io/networks: dual-flannel
     spec:
       containers:
       - name: myapp-container
@@ -43,33 +45,4 @@ spec:
         securityContext:
           privileged: true
         command: ["/bin/bash"]
-        #args: ["-c", "ifconfig eth0:1 10.244.1.2/16 up && ./setup-cu && sleep 36000"]
-        args: ["-c", "ip addr add 10.244.1.2/16 dev eth0 && ./setup-cu && sleep 15 && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"]
-        
-        volumeMounts:
-        - name: cpu-dma
-          mountPath: /dev/cpu_dma_latency
-        - name: cpu-device-sys
-          mountPath: /sys/devices/system/cpu
-        #  subPath: cu_gnb.conf
-        
-        #- name: setup-cu
-        #  mountPath: /oai/setup-cu.exe
-        #  subPath: setup-cu
-      
-      volumes:
-      #- name: cucfg
-      #  configMap:
-      #    name: gnb-cu-configmap
-      #    items: 
-      #    - key: cu_gnb.conf
-      #      path: cu_gnb.conf
-      
-      - name: cpu-dma
-        hostPath:
-          path: /dev/cpu_dma_latency
-      - name: cpu-device-sys
-        hostPath:
-          path: /sys/devices/system/cpu
-          #type: FileOrCreate
-      
+        args: ["-c", "./setup-cu && sleep 3 && cd openairinterface5g/cmake_targets/ran_build/build && ./nr-softmodem --rfsim --sa -O ../../../targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"]
