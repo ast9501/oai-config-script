@@ -35,6 +35,7 @@ func main() {
 	amfDomainName := "free5gc-amf-svc"
 	duDomainName := "oai-du-svc"
 	localInterfaceName := "eth0"
+	secondInterfaceName := "net1"
 	filePath := "openairinterface5g/targets/PROJECTS/GENERIC-NR-5GC/CONF/cu_gnb.conf"
 
 	// config mnc
@@ -81,15 +82,15 @@ func main() {
 		fmt.Println("[LOG]Set interface ip: ", ip)
 	}
 
-	// TODO: Add fixed virtual ip as ip
-	ip = "10.244.1.2"
+	// config secondary interface ip
+	ip, err = GetInterfaceIpv4Addr(secondInterfaceName)
 	mod = "204c\\        GNB_IPV4_ADDRESS_FOR_NG_AMF              = \"" + ip + "/16\";"
 	cmd = exec.Command("sed", "-i", mod, filePath)
 	_, err = cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("[Err]", err)
 	} else {
-		fmt.Println("[LOG]Set virtual ip: ", ip)
+		fmt.Println("[LOG]Set secondary interface ip: ", ip)
 	}
 
 	mod = "206c\\        GNB_IPV4_ADDRESS_FOR_NGU                 = \"" + ip + "/16\";"
@@ -98,7 +99,7 @@ func main() {
 	if err != nil {
 		fmt.Println("[Err]", err)
 	} else {
-		fmt.Println("[LOG]Set virtual ip: ", ip)
+		fmt.Println("[LOG]Set secondary interface ip: ", ip)
 	}
 
 	// config local interface name
@@ -123,7 +124,7 @@ func main() {
 		} else {
 			fmt.Println("[LOG]Config AMF ip: ", amfIp)
 		}
-		
+
  	}
 
 	// config du ip address
