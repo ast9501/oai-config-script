@@ -1,0 +1,3 @@
+[submodule "deploy/free5GC-kubernetes"]
+	path = deploy/free5GC-kubernetes
+	url = https://github.com/ast9501/free5GC-stage3-on-k8s.git
