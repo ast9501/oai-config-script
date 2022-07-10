@@ -1,29 +1,28 @@
 # Solution for CU DU connect to free5GC
 ## Environment
-Golang 1.15.8
-kubernetes v1.23.7 (rke v1.3.12)
-free5GC v3.0.5
+- Golang 1.15.8
+- kubernetes v1.23.7 (rke v1.3.12)
+- free5GC v3.0.5
 
 ## Directory
-* cmd
+### cmd
 source code of cu, du setup exec
 
-* deploy
+### deploy
 yaml file for deploy on kubernetes
 
-* configmap
+### configmap
 configmap of cu, du conf
 
-* sample-config
+### sample-config
 original conf file
 
-* test
+### test
 include cu, du, ue conf on container environment. CU, DU, UE on container and free5GC on k8s.
 
 ## Deploy
 ### Pre-requirements
-Install golang
-Setup kubernetes (with flannel cni, pod-network-cidr=10.244.0.0/16)
+Install golang; Setup kubernetes (with flannel cni, pod-network-cidr=10.244.0.0/16)
 
 ### Deploy multus cni
 ```
