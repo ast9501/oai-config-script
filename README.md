@@ -63,7 +63,7 @@ lsmod | grep gtp5g
 For connection between CU and AMF, we need to insert secondary network interface into AMF, CU pods.
 ```
 # Replace deploy/free5GC-kubernetes/free5gc-nf-yml/cni/amf.yaml with deploy/amf.yaml
-mv deploy/free5GC-kubernetes/free5gc-nf-yml/cni/amf.yaml.old
+mv deploy/free5GC-kubernetes/free5gc-nf-yml/cni/amf.yaml deploy/free5GC-kubernetes/free5gc-nf-yml/cni/amf.yaml.old
 cp deploy/amf.yaml deploy/free5GC-kubernetes/free5gc-nf-yml/cni
 
 # Deploy free5GC v3.0.5
