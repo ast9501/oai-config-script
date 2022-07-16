@@ -1,7 +1,8 @@
 # Solution for CU DU connect to free5GC
 ## Environment
 - Golang 1.15.8
-- kubernetes v1.23.7 (rke v1.3.12)
+- kubernetes v1.19.0
+    - calico v3.11
 - free5GC v3.0.5
 
 ## Directory
@@ -22,19 +23,7 @@ include cu, du, ue conf on container environment. CU, DU, UE on container and fr
 
 ## Deploy
 ### Pre-requirements
-Install golang; Setup kubernetes (with flannel cni, pod-network-cidr=10.244.0.0/16)
-
-### Deploy multus cni
-```
-git clone https://github.com/k8snetworkplumbingwg/multus-cni.git
-cd mulus-cni
-cat ./deployments/multus-daemonset-thick-plugin.yml | kubectl apply -f -
-```
-
-* Create dual flannel cni
-```
-kubectl apply -f deploy/flannel-dual.yaml
-```
+Install golang; Setup kubernetes (with calico cni, pod-network-cidr=192.168.0.0/16 (default))
 
 ### Deploy free5GC v3.0.5
 * Setup NFS server as backend storage of MongoDB
@@ -60,12 +49,7 @@ lsmod | grep gtp5g
 ```
 
 * Deploy free5GC v3.0.5
-For connection between CU and AMF, we need to insert secondary network interface into AMF, CU pods.
 ```
-# Replace deploy/free5GC-kubernetes/free5gc-nf-yml/cni/amf.yaml with deploy/amf.yaml
-mv deploy/free5GC-kubernetes/free5gc-nf-yml/cni/amf.yaml deploy/free5GC-kubernetes/free5gc-nf-yml/cni/amf.yaml.old
-cp deploy/amf.yaml deploy/free5GC-kubernetes/free5gc-nf-yml/cni
-
 # Deploy free5GC v3.0.5
 kubectl apply -f deploy/free5GC-kubernetes/free5gc-nf-yml/cni
 ```
