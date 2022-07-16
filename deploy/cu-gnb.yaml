@@ -10,6 +10,9 @@ spec:
     - name: upf
       protocol: UDP #SCTP #TCP
       port: 2152
+    - name: test
+      protocol: SCTP
+      port: 2153
     - name: du1
       protocol: TCP
       port: 600
@@ -36,12 +39,10 @@ spec:
     metadata:
       labels:
         app: oai-cu
-      annotations:
-        k8s.v1.cni.cncf.io/networks: dual-flannel
     spec:
       containers:
       - name: myapp-container
-        image: alan0415/oai-gnb:v0.2
+        image: alan0415/oai-gnb:v0.3
         securityContext:
           privileged: true
         command: ["/bin/bash"]
