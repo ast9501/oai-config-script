@@ -66,6 +66,25 @@ func main() {
 		fmt.Println("[LOG]Set remote_n_protc: 600")
 	}
 
+	// config local/remote portd
+	mod = "196c\\    local_n_portd   = 2153;"
+	cmd = exec.Command("sed", "-i", mod, filePath)
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("[Err]", err)
+	} else {
+		fmt.Println("[LOG]Set local_n_portd: 2153")
+	}
+
+	mod = "198c\\    remote_n_portd   = 2153;"
+	cmd = exec.Command("sed", "-i", mod, filePath)
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("[Err]", err)
+	} else {
+		fmt.Println("[LOG]Set remote_n_portd: 2153")
+	}
+
 	// config local ip address
 	ip, err := GetInterfaceIpv4Addr(localInterfaceName)
 	if err != nil {
